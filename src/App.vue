@@ -9,7 +9,8 @@ export default {
     return {
       simonMachine: new SimonMachine({
         onSingleSignalOutput: this.handleSignal,
-        onSequenceExecutionFinish: this.handleFinish,
+        onSequenceExecutionFinish: this.handleSequenceExecFinish,
+        onWrongInputSignal: this.handleGameOver,
       }),
     };
   },
@@ -17,8 +18,11 @@ export default {
     handleSignal(signal) {
       console.log(signal);
     },
-    handleFinish() {
-      console.log("machine is finished");
+    handleSequenceExecFinish() {
+      console.log("machine is finished exec");
+    },
+    handleGameOver() {
+      console.log("game over");
     },
   },
   created() {

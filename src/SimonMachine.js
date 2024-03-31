@@ -14,6 +14,7 @@ export default class SimonMachine {
 
   _state = simonMachineStates.READY_TO_START;
   _currentSignalsSequence = [];
+  _inputSignalSequence = [];
   _signalOutputTimeInterval = 1500;
   _HTMLIntervalId = 0;
 
@@ -36,7 +37,7 @@ export default class SimonMachine {
     if (signalNumber === this._currentSignalsSequence.length) {
       this._onSequenceExecutionFinish();
       clearInterval(this._HTMLIntervalId);
-      this._state === simonMachineStates.INPUT_WAITING;
+      this._state = simonMachineStates.INPUT_WAITING;
     }
   }
 
@@ -49,7 +50,32 @@ export default class SimonMachine {
     }, this._signalOutputTimeInterval);
   }
 
-  input(signal) { }
+  _verifyInputSequence() {
+    return this._inputSignalSequence
+      .every((signal, idx) => signal === this._currentSignalsSequence[idx]);
+  }
+
+  _checkAllSequenceInputed() {
+    return this._inputSignalSequence.length === this._currentSignalsSequence.length;
+  }
+
+  input(signal) {
+    if (this._state !== simonMachineStates.INPUT_WAITING) {
+      return;
+    }
+
+    this._inputSignalSequence.push(signal);
+    if (this._verifyInputSequence()) {
+      if (this._checkAllSequenceInputed()) {
+        this._inputSignalSequence.length = 0;
+        this._state = simonMachineStates.SEQUNCE_EXECUTION;
+        this._executeSequence();
+      }
+    } else {
+      this._state = simonMachineStates.FINISHED;
+      this._onWrongInputSignal();
+    }
+  }
 
   start() {
     if (this._state === simonMachineStates.READY_TO_START) {
