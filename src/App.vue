@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <div class="buttons-wrapper">
       <button
         v-for="(signal, idx) of simonMachineSignals"
@@ -10,47 +10,49 @@
         class="button"
       ></button>
     </div>
-    <button @click="handleStartBtnClicked">start</button>
     <div>
-      <p>Complexity</p>
-      <ul class="levels-list">
-        <li>
-          <input
-            :checked="difficulty === simonMachineModes.SLOW"
-            @click="handleDifficultyCheck(simonMachineModes.SLOW)"
-            type="radio"
-            name="difficulty"
-            id="level-easy"
-            :disabled="canSwitchDifficulty"
-          />
-          <label for="level-easy">Easy</label>
-        </li>
-        <li>
-          <input
-            :checked="difficulty === simonMachineModes.FAST"
-            @click="handleDifficultyCheck(simonMachineModes.FAST)"
-            type="radio"
-            name="difficulty"
-            id="level-medium"
-            :disabled="canSwitchDifficulty"
-          />
-          <label for="level-medium">Medium</label>
-        </li>
-        <li>
-          <input
-            :checked="difficulty === simonMachineModes.VERY_FAST"
-            @click="handleDifficultyCheck(simonMachineModes.VERY_FAST)"
-            type="radio"
-            name="difficulty"
-            id="level-hard"
-            :disabled="canSwitchDifficulty"
-          />
-          <label for="level-hard">Hard</label>
-        </li>
-      </ul>
+      <button @click="handleStartBtnClicked">Start</button>
+      <p>Round: {{ round }}</p>
+      <p v-if="isGameOver">Lose...</p>
+      <div>
+        <p>Complexity</p>
+        <ul class="levels-list">
+          <li>
+            <input
+              :checked="difficulty === simonMachineModes.SLOW"
+              @click="handleDifficultyCheck(simonMachineModes.SLOW)"
+              type="radio"
+              name="difficulty"
+              id="level-easy"
+              :disabled="canSwitchDifficulty"
+            />
+            <label for="level-easy">Easy</label>
+          </li>
+          <li>
+            <input
+              :checked="difficulty === simonMachineModes.FAST"
+              @click="handleDifficultyCheck(simonMachineModes.FAST)"
+              type="radio"
+              name="difficulty"
+              id="level-medium"
+              :disabled="canSwitchDifficulty"
+            />
+            <label for="level-medium">Medium</label>
+          </li>
+          <li>
+            <input
+              :checked="difficulty === simonMachineModes.VERY_FAST"
+              @click="handleDifficultyCheck(simonMachineModes.VERY_FAST)"
+              type="radio"
+              name="difficulty"
+              id="level-hard"
+              :disabled="canSwitchDifficulty"
+            />
+            <label for="level-hard">Hard</label>
+          </li>
+        </ul>
+      </div>
     </div>
-    <span>Round: {{ round }}</span>
-    <p v-if="isGameOver">Lose...</p>
   </div>
 </template>
 
@@ -113,15 +115,23 @@ export default {
 </script>
 
 <style>
+.wrapper {
+  font-family: sans-serif;
+  width: 400px;
+  display: flex;
+  justify-content: space-around;
+  margin: 5vh auto;
+}
+
 .buttons-wrapper {
-  width: 200px;
+  width: 240px;
   position: relative;
 }
 
 .button {
-  width: 100px;
-  height: 100px;
-  opacity: 0.55;
+  width: 120px;
+  height: 120px;
+  opacity: 0.5;
   border: 1px solid grey;
   padding: 0;
 }
@@ -170,7 +180,7 @@ export default {
 
 .active {
   opacity: 1 !important;
-  border: 1px solid #333;
+  border: 2px solid #333;
 }
 
 .levels-list {
