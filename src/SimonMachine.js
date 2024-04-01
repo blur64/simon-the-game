@@ -18,8 +18,14 @@ export default class SimonMachine {
   _inputSignalSequence = [];
   _signalOutputTimeInterval = 1500;
   _HTMLIntervalId = 0;
+  _activeSignal = -1;
 
-  constructor({ onSingleSignalOutput, onSequenceExecutionFinish, onWrongInputSignal, onIncreaseSignals }) {
+  constructor({
+    onSingleSignalOutput = () => { },
+    onSequenceExecutionFinish = () => { },
+    onWrongInputSignal = () => { },
+    onIncreaseSignals = () => { }
+  }) {
     this._onSingleSignalOutput = onSingleSignalOutput;
     this._onSequenceExecutionFinish = onSequenceExecutionFinish;
     this._onWrongInputSignal = onWrongInputSignal;
@@ -32,6 +38,8 @@ export default class SimonMachine {
 
   _outputSignal(numberOfSignalToOutput) {
     const signalToOutput = this._currentSignalsSequence[numberOfSignalToOutput];
+    this._activeSignal = signalToOutput;
+    setTimeout(() => this._activeSignal = -1, this._signalOutputTimeInterval - 500);
     this._onSingleSignalOutput(signalToOutput);
   }
 
@@ -66,10 +74,18 @@ export default class SimonMachine {
   }
 
   _reset() {
-    this._currentSignalsSequence.length = 0;
-    this._inputSignalSequence.length = 0;
+    this._currentSignalsSequence = [];
+    this._inputSignalSequence = [];
     clearInterval(this._HTMLIntervalId);
     this._state = simonMachineStates.READY_TO_START;
+  }
+
+  get currentSignalsSequence() {
+    return this._currentSignalsSequence;
+  }
+
+  get activeSignal() {
+    return this._activeSignal;
   }
 
   input(signal) {
@@ -80,7 +96,7 @@ export default class SimonMachine {
     this._inputSignalSequence.push(signal);
     if (this._verifyInputSequence()) {
       if (this._checkAllSequenceInputed()) {
-        this._inputSignalSequence.length = 0;
+        this._inputSignalSequence = [];
         this._state = simonMachineStates.SEQUNCE_EXECUTION;
         this._executeSequence();
       }
@@ -88,6 +104,7 @@ export default class SimonMachine {
       this._state = simonMachineStates.FINISHED;
       this._reset();
       this._onWrongInputSignal();
+      console.log(this);
     }
   }
 

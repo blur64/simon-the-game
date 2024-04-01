@@ -11,6 +11,7 @@
     </div>
     <button @click="handleStartBtnClicked">start</button>
     <span>{{ round }}</span>
+    <p v-if="isGameOver">Lose...</p>
   </div>
 </template>
 
@@ -21,46 +22,42 @@ export default {
   name: "App",
   data() {
     return {
-      simonMachine: new SimonMachine({
-        onSingleSignalOutput: this.handleSignal,
-        onSequenceExecutionFinish: this.handleSequenceExecFinish,
-        onWrongInputSignal: this.handleGameOver,
-        onIncreaseSignals: this.handleNextRound,
-      }),
+      simonMachine: new SimonMachine({}),
       simonMachineSignals,
-      activeSignal: -1,
-      round: 0,
+      isGameOver: false,
     };
   },
+  computed: {
+    currentSignals() {
+      return this.simonMachine.currentSignalsSequence;
+    },
+    activeSignal() {
+      return this.simonMachine.activeSignal;
+    },
+    round() {
+      return this.currentSignals.length;
+    },
+  },
   methods: {
-    handleSignal(signal) {
-      this.activeSignal = signal;
-      setTimeout(() => (this.activeSignal = -1), 1000);
-    },
-    handleSequenceExecFinish() {
-      this.activeSignal = -1;
-    },
-    handleGameOver() {
-      this.round = 0;
-    },
     handleSignalBtnClicked(signal) {
       this.simonMachine.input(signal);
     },
     handleStartBtnClicked() {
       this.simonMachine.start();
     },
-    handleNextRound() {
-      this.round++;
+  },
+  watch: {
+    activeSignal(newVal, oldVal) {
+      // play sound here
+    },
+    round(newVal, oldVal) {
+      this.isGameOver = newVal !== oldVal && newVal === 0;
     },
   },
 };
 </script>
 
 <style>
-.active {
-  background-color: palevioletred;
-}
-
 .buttons-wrapper {
   width: 200px;
   position: relative;
