@@ -24,9 +24,11 @@ export default {
         onSingleSignalOutput: this.handleSignal,
         onSequenceExecutionFinish: this.handleSequenceExecFinish,
         onWrongInputSignal: this.handleGameOver,
+        onIncreaseSignals: this.handleNextRound,
       }),
       simonMachineSignals,
       activeSignal: -1,
+      round: 0,
     };
   },
   methods: {
@@ -37,12 +39,17 @@ export default {
     handleSequenceExecFinish() {
       this.activeSignal = -1;
     },
-    handleGameOver() {},
+    handleGameOver() {
+      this.round = 0;
+    },
     handleSignalBtnClicked(signal) {
       this.simonMachine.input(signal);
     },
     handleStartBtnClicked() {
       this.simonMachine.start();
+    },
+    handleNextRound() {
+      this.round++;
     },
   },
 };

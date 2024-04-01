@@ -11,6 +11,7 @@ export default class SimonMachine {
   _onSingleSignalOutput = null;
   _onSequenceExecutionFinish = null;
   _onWrongInputSignal = null;
+  _onIncreaseSignals = null;
 
   _state = simonMachineStates.READY_TO_START;
   _currentSignalsSequence = [];
@@ -18,10 +19,11 @@ export default class SimonMachine {
   _signalOutputTimeInterval = 1500;
   _HTMLIntervalId = 0;
 
-  constructor({ onSingleSignalOutput, onSequenceExecutionFinish, onWrongInputSignal }) {
+  constructor({ onSingleSignalOutput, onSequenceExecutionFinish, onWrongInputSignal, onIncreaseSignals }) {
     this._onSingleSignalOutput = onSingleSignalOutput;
     this._onSequenceExecutionFinish = onSequenceExecutionFinish;
     this._onWrongInputSignal = onWrongInputSignal;
+    this._onIncreaseSignals = onIncreaseSignals;
   }
 
   _getRandomSignal() {
@@ -45,6 +47,7 @@ export default class SimonMachine {
 
   _executeSequence() {
     this._currentSignalsSequence.push(this._getRandomSignal());
+    this._onIncreaseSignals();
     let signalNumber = 0;
     this._HTMLIntervalId = setInterval(() => {
       this._outputSignal(signalNumber);
