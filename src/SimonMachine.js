@@ -62,6 +62,13 @@ export default class SimonMachine {
     return this._inputSignalSequence.length === this._currentSignalsSequence.length;
   }
 
+  _reset() {
+    this._currentSignalsSequence.length = 0;
+    this._inputSignalSequence.length = 0;
+    clearInterval(this._HTMLIntervalId);
+    this._state = simonMachineStates.READY_TO_START;
+  }
+
   input(signal) {
     if (this._state !== simonMachineStates.INPUT_WAITING) {
       return;
@@ -76,6 +83,7 @@ export default class SimonMachine {
       }
     } else {
       this._state = simonMachineStates.FINISHED;
+      this._reset();
       this._onWrongInputSignal();
     }
   }

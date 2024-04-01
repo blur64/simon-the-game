@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     handleSignal(signal) {
-      console.log(signal);
       this.activeBtnId = signal;
       setTimeout(() => (this.activeBtnId = -1), 1000);
     },
