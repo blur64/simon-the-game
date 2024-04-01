@@ -109,6 +109,15 @@ export default class SimonMachine {
     return this._mode;
   }
 
+  get isInputWaiting() {
+    return this._state === simonMachineStates.INPUT_WAITING;
+  }
+
+  get isActive() {
+    return this._state === simonMachineStates.READY_TO_START ||
+      this._state === simonMachineStates.FINISH;
+  }
+
   setMode(modeToSet) {
     if (this._state !== simonMachineStates.READY_TO_START) {
       return;
@@ -132,7 +141,6 @@ export default class SimonMachine {
       this._state = simonMachineStates.FINISHED;
       this._reset();
       this._onWrongInputSignal();
-      console.log(this);
     }
   }
 

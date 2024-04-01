@@ -6,6 +6,7 @@
         :key="idx"
         @click="handleSignalBtnClicked(signal)"
         :class="{ active: activeSignal === signal }"
+        :disabled="!isUserCanInput"
         class="button"
       ></button>
     </div>
@@ -20,6 +21,7 @@
             type="radio"
             name="difficulty"
             id="level-easy"
+            :disabled="canSwitchDifficulty"
           />
           <label for="level-easy">Easy</label>
         </li>
@@ -30,6 +32,7 @@
             type="radio"
             name="difficulty"
             id="level-medium"
+            :disabled="canSwitchDifficulty"
           />
           <label for="level-medium">Medium</label>
         </li>
@@ -40,6 +43,7 @@
             type="radio"
             name="difficulty"
             id="level-hard"
+            :disabled="canSwitchDifficulty"
           />
           <label for="level-hard">Hard</label>
         </li>
@@ -67,6 +71,9 @@ export default {
     };
   },
   computed: {
+    isUserCanInput() {
+      return this.simonMachine.isInputWaiting;
+    },
     currentSignals() {
       return this.simonMachine.currentSignalsSequence;
     },
@@ -78,6 +85,9 @@ export default {
     },
     difficulty() {
       return this.simonMachine.mode;
+    },
+    canSwitchDifficulty() {
+      return !this.simonMachine.isActive;
     },
   },
   methods: {
@@ -116,10 +126,6 @@ export default {
   padding: 0;
 }
 
-.button:hover {
-  cursor: pointer;
-}
-
 .button:first-child {
   border-top-left-radius: 9999px;
   background-color: blue;
@@ -137,6 +143,10 @@ export default {
   background-color: yellow;
 }
 
+.button:hover {
+  cursor: pointer;
+}
+
 .button:active {
   opacity: 1;
   position: relative;
@@ -152,8 +162,14 @@ export default {
   bottom: 2px;
 }
 
+.button:disabled {
+  cursor: initial;
+  opacity: 0.55;
+  position: initial;
+}
+
 .active {
-  opacity: 1;
+  opacity: 1 !important;
   border: 1px solid #333;
 }
 
