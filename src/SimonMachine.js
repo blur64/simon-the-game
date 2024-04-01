@@ -7,6 +7,18 @@ const simonMachineStates = {
 
 export const simonMachineSignals = [0, 1, 2, 3];
 
+export const simonMachineModes = {
+  SLOW: 0,
+  FAST: 1,
+  VERY_FAST: 2,
+};
+
+const modesSpeed = {
+  [simonMachineModes.SLOW]: 1500,
+  [simonMachineModes.FAST]: 1000,
+  [simonMachineModes.VERY_FAST]: 400,
+};
+
 export default class SimonMachine {
   _onSingleSignalOutput = null;
   _onSequenceExecutionFinish = null;
@@ -19,6 +31,7 @@ export default class SimonMachine {
   _signalOutputTimeInterval = 1500;
   _HTMLIntervalId = 0;
   _activeSignal = -1;
+  _mode = simonMachineModes.SLOW;
 
   constructor({
     onSingleSignalOutput = () => { },
@@ -36,10 +49,14 @@ export default class SimonMachine {
     return generateRandomIntFromZeroTo(3);
   }
 
+  _calculateSignalRetentionTime() {
+    return this._signalOutputTimeInterval - this._signalOutputTimeInterval * 0.2;
+  }
+
   _outputSignal(numberOfSignalToOutput) {
     const signalToOutput = this._currentSignalsSequence[numberOfSignalToOutput];
     this._activeSignal = signalToOutput;
-    setTimeout(() => this._activeSignal = -1, this._signalOutputTimeInterval - 500);
+    setTimeout(() => this._activeSignal = -1, this._calculateSignalRetentionTime());
     this._onSingleSignalOutput(signalToOutput);
   }
 
@@ -88,6 +105,17 @@ export default class SimonMachine {
     return this._activeSignal;
   }
 
+  get mode() {
+    return this._mode;
+  }
+
+  setMode(modeToSet) {
+    if (this._state !== simonMachineStates.READY_TO_START) {
+      return;
+    }
+    this._mode = modeToSet;
+  }
+
   input(signal) {
     if (this._state !== simonMachineStates.INPUT_WAITING) {
       return;
@@ -111,6 +139,7 @@ export default class SimonMachine {
   start() {
     if (this._state === simonMachineStates.READY_TO_START) {
       this._state = simonMachineStates.SEQUNCE_EXECUTION;
+      this._signalOutputTimeInterval = modesSpeed[this._mode];
       this._executeSequence();
     }
   }

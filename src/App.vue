@@ -10,13 +10,51 @@
       ></button>
     </div>
     <button @click="handleStartBtnClicked">start</button>
-    <span>{{ round }}</span>
+    <div>
+      <p>Complexity</p>
+      <ul class="levels-list">
+        <li>
+          <input
+            :checked="difficulty === simonMachineModes.SLOW"
+            @click="handleDifficultyCheck(simonMachineModes.SLOW)"
+            type="radio"
+            name="difficulty"
+            id="level-easy"
+          />
+          <label for="level-easy">Easy</label>
+        </li>
+        <li>
+          <input
+            :checked="difficulty === simonMachineModes.FAST"
+            @click="handleDifficultyCheck(simonMachineModes.FAST)"
+            type="radio"
+            name="difficulty"
+            id="level-medium"
+          />
+          <label for="level-medium">Medium</label>
+        </li>
+        <li>
+          <input
+            :checked="difficulty === simonMachineModes.VERY_FAST"
+            @click="handleDifficultyCheck(simonMachineModes.VERY_FAST)"
+            type="radio"
+            name="difficulty"
+            id="level-hard"
+          />
+          <label for="level-hard">Hard</label>
+        </li>
+      </ul>
+    </div>
+    <span>Round: {{ round }}</span>
     <p v-if="isGameOver">Lose...</p>
   </div>
 </template>
 
 <script>
-import SimonMachine, { simonMachineSignals } from "./SimonMachine";
+import SimonMachine, {
+  simonMachineSignals,
+  simonMachineModes,
+} from "./SimonMachine";
 
 export default {
   name: "App",
@@ -24,6 +62,7 @@ export default {
     return {
       simonMachine: new SimonMachine({}),
       simonMachineSignals,
+      simonMachineModes,
       isGameOver: false,
     };
   },
@@ -37,6 +76,9 @@ export default {
     round() {
       return this.currentSignals.length;
     },
+    difficulty() {
+      return this.simonMachine.mode;
+    },
   },
   methods: {
     handleSignalBtnClicked(signal) {
@@ -44,6 +86,9 @@ export default {
     },
     handleStartBtnClicked() {
       this.simonMachine.start();
+    },
+    handleDifficultyCheck(difficulty) {
+      this.simonMachine.setMode(difficulty);
     },
   },
   watch: {
@@ -110,5 +155,9 @@ export default {
 .active {
   opacity: 1;
   border: 1px solid #333;
+}
+
+.levels-list {
+  list-style-type: none;
 }
 </style>
