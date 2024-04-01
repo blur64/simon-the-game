@@ -138,7 +138,8 @@ export default {
 
 .buttons-wrapper {
   width: 240px;
-  position: relative;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .button {
@@ -172,23 +173,11 @@ export default {
 
 .button:active {
   opacity: 1;
-  position: relative;
-}
-
-.button:first-child:active,
-.button:nth-child(2):active {
-  top: 2px;
-}
-
-.button:last-child:active,
-.button:nth-child(3):active {
-  bottom: 2px;
 }
 
 .button:disabled {
   cursor: initial;
   opacity: 0.55;
-  position: initial;
 }
 
 .active {
