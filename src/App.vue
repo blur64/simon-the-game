@@ -62,6 +62,13 @@ import SimonMachine, {
   simonMachineModes,
 } from "./SimonMachine";
 
+const soundsPaths = [
+  require("./assets/1.mp3"),
+  require("./assets/2.mp3"),
+  require("./assets/3.mp3"),
+  require("./assets/4.mp3"),
+];
+
 export default {
   name: "App",
   data() {
@@ -95,6 +102,7 @@ export default {
   methods: {
     handleSignalBtnClicked(signal) {
       this.simonMachine.input(signal);
+      this.playSignalSound(signal);
     },
     handleStartBtnClicked() {
       this.simonMachine.start();
@@ -102,10 +110,15 @@ export default {
     handleDifficultyCheck(difficulty) {
       this.simonMachine.setMode(difficulty);
     },
+    playSignalSound(signal) {
+      const sound = new Audio(soundsPaths[signal]);
+      sound.volume = 0.4;
+      sound.play();
+    },
   },
   watch: {
-    activeSignal(newVal, oldVal) {
-      // play sound here
+    activeSignal(newVal) {
+      this.playSignalSound(newVal);
     },
     round(newVal, oldVal) {
       this.isGameOver = newVal !== oldVal && newVal === 0;
