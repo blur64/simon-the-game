@@ -34,10 +34,12 @@ export default class SimonMachine {
   }
 
   _finishExecutionIfSignalIsLast(signalNumber) {
-    if (signalNumber === this._currentSignalsSequence.length) {
-      this._onSequenceExecutionFinish();
+    if (signalNumber === this._currentSignalsSequence.length - 1) {
       clearInterval(this._HTMLIntervalId);
-      this._state = simonMachineStates.INPUT_WAITING;
+      setTimeout(() => {
+        this._onSequenceExecutionFinish();
+        this._state = simonMachineStates.INPUT_WAITING;
+      }, this._signalOutputTimeInterval);
     }
   }
 
@@ -45,8 +47,9 @@ export default class SimonMachine {
     this._currentSignalsSequence.push(this._getRandomSignal());
     let signalNumber = 0;
     this._HTMLIntervalId = setInterval(() => {
-      this._outputSignal(signalNumber++);
+      this._outputSignal(signalNumber);
       this._finishExecutionIfSignalIsLast(signalNumber);
+      ++signalNumber;
     }, this._signalOutputTimeInterval);
   }
 
