@@ -5,7 +5,7 @@ const simonMachineStates = {
   FINISHED: 3,
 };
 
-// const simonMachineSignals = {}; ??
+export const simonMachineSignals = [0, 1, 2, 3];
 
 export default class SimonMachine {
   _onSingleSignalOutput = null;

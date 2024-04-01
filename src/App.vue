@@ -1,35 +1,20 @@
 <template>
   <div>
     <button
-      :class="{ active: activeBtnId === 0 }"
-      @click="handleSignalBtnClicked(0)"
+      v-for="(signal, idx) of simonMachineSignals"
+      :key="idx"
+      @click="handleSignalBtnClicked(signal)"
+      :class="{ active: activeSignal === signal }"
     >
-      0
-    </button>
-    <button
-      :class="{ active: activeBtnId === 1 }"
-      @click="handleSignalBtnClicked(1)"
-    >
-      1
-    </button>
-    <button
-      :class="{ active: activeBtnId === 2 }"
-      @click="handleSignalBtnClicked(2)"
-    >
-      2
-    </button>
-    <button
-      :class="{ active: activeBtnId === 3 }"
-      @click="handleSignalBtnClicked(3)"
-    >
-      3
+      {{ signal }}
     </button>
     <button @click="handleStartBtnClicked">start</button>
+    <span>{{ round }}</span>
   </div>
 </template>
 
 <script>
-import SimonMachine from "./SimonMachine";
+import SimonMachine, { simonMachineSignals } from "./SimonMachine";
 
 export default {
   name: "App",
@@ -40,16 +25,17 @@ export default {
         onSequenceExecutionFinish: this.handleSequenceExecFinish,
         onWrongInputSignal: this.handleGameOver,
       }),
-      activeBtnId: -1,
+      simonMachineSignals,
+      activeSignal: -1,
     };
   },
   methods: {
     handleSignal(signal) {
-      this.activeBtnId = signal;
-      setTimeout(() => (this.activeBtnId = -1), 1000);
+      this.activeSignal = signal;
+      setTimeout(() => (this.activeSignal = -1), 1000);
     },
     handleSequenceExecFinish() {
-      this.activeBtnId = -1;
+      this.activeSignal = -1;
     },
     handleGameOver() {},
     handleSignalBtnClicked(signal) {
