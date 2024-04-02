@@ -19,6 +19,18 @@ const modesSpeed = {
   [simonMachineModes.VERY_FAST]: 400,
 };
 
+/**
+ * This class represents an abstraction over mechanism (working principe) of 
+ * the game. This mechanism will stay the same independant of the environment
+ * the game exists in (browser page, desktop or mobile app, api, physical 
+ * device). That's why this class operates abstract signals rather than 
+ * definite buttons like in a physical simon-game device. Because user 
+ * interface of the game might not to assume buttons: for example, device can 
+ * produce sequnce by only specific sounds and user must repeat them by own 
+ * voice. There's can be different interfaces variants but theese abstract
+ * "signals" will be always in one way or another.
+ * @class
+ */
 export default class SimonMachine {
   _onSingleSignalOutput = null;
   _onSequenceExecutionFinish = null;
